@@ -5,10 +5,11 @@ class App extends Component {
     startTime: undefined,
     endTime: undefined,
     timeLeft: undefined,
-    countdown: undefined
+    countdown: undefined,
+    timerFinished: false
   }
   render() {
-    const { startTime, endTime, timeLeft, countdown } = this.state
+    const { startTime, endTime, timeLeft, countdown, timerFinished } = this.state
 
     return (
       <div className="timer">
@@ -23,7 +24,10 @@ class App extends Component {
           </form>
         </div>
         <div className="display">
-          <h1 className="display__time-left">{ countdown && this._formatTimeLeft(timeLeft) }</h1>
+          { timerFinished
+            ? <h1 className="display__time-left">Get Back To Work!</h1>
+            : <h1 className="display__time-left">{ countdown && this._formatTimeLeft(timeLeft) }</h1>
+          }
           <p className="display__end-time">
             { countdown
               ? `Be Back At ${this._formatEndTime(endTime)}`
@@ -47,14 +51,14 @@ class App extends Component {
 
       if (timeLeft < 0) {
         clearInterval(this.state.countdown)
-        this.setState({ timeLeft: 0, countdown: undefined})
+        this.setState({ timeLeft: 0, countdown: undefined, timerFinished: true })
         return
       }
 
       this.setState({ timeLeft })
     }, 1000)
 
-    this.setState({ startTime, endTime, timeLeft, countdown })
+    this.setState({ startTime, endTime, timeLeft, countdown, timerFinished: false })
   }
   _handleForm = (e) => {
     e.preventDefault()
